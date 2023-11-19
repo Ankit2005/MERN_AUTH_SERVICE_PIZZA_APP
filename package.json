@@ -1,0 +1,11 @@
+{
+  "name": "clear",
+  "version": "1.0.0",
+  "description": "auth micro-service",
+  "main": "index.js",
+  "scripts": {
+    "dev" : "node src/server.js"
+  },
+  "author": "ankit bharvad",
+  "license": "ISC"
+}
