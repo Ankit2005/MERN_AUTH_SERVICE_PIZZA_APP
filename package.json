@@ -4,8 +4,12 @@
   "description": "auth micro-service",
   "main": "index.js",
   "scripts": {
-    "dev" : "node src/server.js"
+    "dev": "node src/server.ts"
   },
   "author": "ankit bharvad",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.9.2",
+    "typescript": "^5.2.2"
+  }
 }
