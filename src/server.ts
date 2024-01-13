@@ -8,10 +8,12 @@ const startServer = () => {
     try {
         app.listen(PORT, () => {
             // eslint-disable-next-line no-console
+            console.log("inside server");
             logger.info(`Listening on port ${PORT}`);
         });
     } catch (err: unknown) {
         // eslint-disable-next-line no-console
+        console.log("test");
         logger.error(err);
         if (err instanceof Error) {
             logger.error(err.message);
