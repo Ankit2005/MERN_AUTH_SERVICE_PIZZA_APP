@@ -40,6 +40,21 @@ describe("POST /aut/register", () => {
                 (response.headers as Record<string, string>)["content-type"],
             ).toEqual(expect.stringContaining("json"));
         });
+
+        it("should persist the user in the database", async () => {
+            // Arrange
+            const userData = {
+                firtName: "ankit",
+                lastName: "bharvad",
+                email: "ankitmb15@gmail.com",
+                password: "1234",
+            };
+
+            // Act
+            await request(app).post("/auth/register").send(userData);
+
+            // Assert
+        });
     });
 
     describe("Fields are missing", () => {});
