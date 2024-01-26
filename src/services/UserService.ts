@@ -1,5 +1,6 @@
 import createHttpError from "http-errors";
 import { Repository } from "typeorm";
+import { Roles } from "../constants";
 import { User } from "../entity/User";
 import { UserData } from "../types";
 
@@ -8,11 +9,12 @@ export class UserService {
 
     async create({ firstName, lastName, email, password }: UserData) {
         try {
-            await this.userRepository.save({
+            return await this.userRepository.save({
                 firstName,
                 lastName,
                 email,
                 password,
+                role: Roles.CUSTOMER,
             });
         } catch (err) {
             const error = createHttpError(

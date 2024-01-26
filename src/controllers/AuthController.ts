@@ -23,14 +23,15 @@ export class AuthController {
         });
         try {
             // console.log(req.body);
-            await this.userService.create({
+            const user = await this.userService.create({
                 firstName,
                 lastName,
                 email,
                 password,
             });
-            this.logger.info("User has been registered", { id: 2 });
-            res.status(201).json({ id: 2 });
+            // console.log(user);
+            this.logger.info("User has been registered", { id: user.id });
+            res.status(201).json({ id: user.id });
         } catch (error) {
             next(error);
             return;
