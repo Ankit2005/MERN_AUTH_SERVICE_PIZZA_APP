@@ -25,6 +25,7 @@ describe("POST /aut/register", () => {
         it("should return the 201 status code", async () => {
             // Arrange
             const userData = {
+                age: "26",
                 firstName: "ankit",
                 lastName: "bharvad",
                 email: "ankitmb15@gmail.com",
@@ -101,7 +102,7 @@ describe("POST /aut/register", () => {
             const users = await userRepository.find();
 
             expect(users).toHaveLength(1);
-            expect(232).toBe(232);
+            //expect(232).toBe(232);
         });
     });
 
