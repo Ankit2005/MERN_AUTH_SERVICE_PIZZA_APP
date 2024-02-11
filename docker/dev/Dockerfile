@@ -18,3 +18,6 @@ EXPOSE 5501
 
 # The command to run our app
 CMD ["npm", "run", "dev"]
+
+# docker run --name sad_rosalind --network mynetwork -d auth-service:dev 
+# docker run --name mernpg-container --network mynetwork -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -d postgres
