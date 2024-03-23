@@ -10,9 +10,9 @@ export const AppDataSource = new DataSource({
     port: Number(Config.DB_PORT),
     username: "root",
     password: "root",
-    database: Config.DB_HOST,
+    database: Config.DB_NAME,
     // Dont use this in production. Always keep false
-    synchronize: false,
+    synchronize: true,
     logging: false,
     entities: [User, RefreshToken],
     migrations: [],

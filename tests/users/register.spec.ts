@@ -177,6 +177,7 @@ describe("POST /aut/register", () => {
             expect(response.statusCode).toBe(400);
             expect(users).toHaveLength(1);
         });
+
         it("should return the access token and refresh token inside a cookie", async () => {
             // Arrange
 
@@ -223,6 +224,7 @@ describe("POST /aut/register", () => {
             expect(isJwt(accessToken)).toBeTruthy();
             expect(isJwt(refreshToken)).toBeTruthy();
         });
+
         it("should store then refresh token in the databse", async () => {
             // Arrange
 
@@ -394,6 +396,7 @@ describe("POST /aut/register", () => {
             expect(res.statusCode).toBe(400);
             expect(users).toHaveLength(0);
         });
+
         it("should return 400 status code if password length is less then 8 chars", async () => {
             // Arrange
 
@@ -418,6 +421,7 @@ describe("POST /aut/register", () => {
             expect(res.statusCode).toBe(400);
             expect(users).toHaveLength(0);
         });
+
         it.todo("should return an array of error message if email is missing");
     });
 });
