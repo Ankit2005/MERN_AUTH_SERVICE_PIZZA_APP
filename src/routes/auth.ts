@@ -4,9 +4,11 @@ import logger from "../config/logger";
 import { AuthController } from "../controllers/AuthController";
 import { RefreshToken } from "../entity/RefreshToken";
 import { User } from "../entity/User";
+import authenticate from "../middlewares/authenticate";
 import { CredentialService } from "../services/CredentialService";
 import { TokenService } from "../services/TokenService";
 import { UserService } from "../services/UserService";
+import { AuthRequest } from "../types";
 import loginValidators from "../validators/login-validators";
 import registerValidators from "../validators/register-validators";
 
@@ -38,6 +40,10 @@ router.post(
     loginValidators,
     (req: Request, res: Response, next: NextFunction) =>
         authController.login(req, res, next),
+);
+
+router.get("/self", authenticate, (req: Request, res: Response) =>
+    authController.self(req as AuthRequest, res),
 );
 
 export default router;
