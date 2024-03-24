@@ -77,5 +77,58 @@ describe("GET /auth/self", () => {
                 createdUserData.id,
             );
         });
+
+        it("should not return then password field ", async () => {
+            // Register user
+
+            const userData = {
+                age: "26",
+                firstName: "ankit",
+                lastName: "bharvad",
+                email: "ankitmb15@gmail.com",
+                password: "ankit2005",
+                role: Roles.CUSTOMER,
+            };
+            const userRepository = connection.getRepository(User);
+            const createdUserData = await userRepository.save(userData);
+
+            // Generate token
+            const accessToken = jwks.token({
+                sub: String(createdUserData.id),
+                role: createdUserData.role,
+            });
+            // Add token to cookie
+
+            const response = await request(app)
+                .get("/auth/self")
+                .set("Cookie", [`accessToken=${accessToken};`])
+                .send();
+
+            // Assert
+            // Check if user id matches with registered user
+            expect(response.body as Record<string, string>).not.toHaveProperty(
+                "password",
+            );
+        });
+
+        it("should not return 401 status code if token does not exists ", async () => {
+            // Register user
+
+            const userData = {
+                age: "26",
+                firstName: "ankit",
+                lastName: "bharvad",
+                email: "ankitmb15@gmail.com",
+                password: "ankit2005",
+                role: Roles.CUSTOMER,
+            };
+            const userRepository = connection.getRepository(User);
+            await userRepository.save(userData);
+
+            const response = await request(app).get("/auth/self").send();
+
+            // Assert
+            expect(response.statusCode).toBe(401);
+        });
     });
 });
