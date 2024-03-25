@@ -168,4 +168,63 @@ export class AuthController {
         const user = await this.userService.findById(Number(req.auth.sub));
         res.json({ ...user, password: undefined });
     }
+
+    async refresh(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            const payload: JwtPayload = {
+                sub: req.auth.sub,
+                role: req.auth.role,
+            };
+
+            const accessToken = this.tokenService.generateAccessToken(payload);
+            this.logger.info("create new accessToken");
+
+            const user = await this.userService.findById(Number(req.auth.sub));
+
+            if (!user) {
+                const error = createHttpError(
+                    400,
+                    "User with token could not find.",
+                );
+                next(error);
+                return;
+            }
+
+            // Persist the refresh token
+            const newRefreshToken =
+                await this.tokenService.persistRefreshToken(user);
+            this.logger.info("create new refreshToken");
+
+            // Delete old refresh token
+            await this.tokenService.deleteRefreshToken(Number(req.auth.id));
+            this.logger.info("delete old refreshToken");
+
+            const refreshToken = this.tokenService.generateRefreshToken({
+                ...payload,
+                id: String(newRefreshToken.id),
+            });
+
+            res.cookie("accessToken", accessToken, {
+                domain: "localhost",
+                sameSite: "strict",
+                maxAge: 1000 * 60 * 60, // expire in 1h
+                httpOnly: true, // very important flag
+            });
+
+            res.cookie("refreshToken", refreshToken, {
+                domain: "localhost",
+                sameSite: "strict",
+                maxAge: 1000 * 60 * 60 * 24 * 365, // expire in 1-year
+                httpOnly: true, // very important flag
+            });
+
+            this.logger.info("user has been logged in", { id: user.id });
+
+            res.json({ id: user.id });
+        } catch (error) {
+            this.logger.error("error in 123x");
+            next(error);
+            return;
+        }
+    }
 }

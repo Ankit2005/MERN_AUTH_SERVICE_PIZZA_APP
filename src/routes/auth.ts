@@ -5,6 +5,7 @@ import { AuthController } from "../controllers/AuthController";
 import { RefreshToken } from "../entity/RefreshToken";
 import { User } from "../entity/User";
 import authenticate from "../middlewares/authenticate";
+import validateRefreshToken from "../middlewares/validateRefreshToken";
 import { CredentialService } from "../services/CredentialService";
 import { TokenService } from "../services/TokenService";
 import { UserService } from "../services/UserService";
@@ -44,6 +45,13 @@ router.post(
 
 router.get("/self", authenticate, (req: Request, res: Response) =>
     authController.self(req as AuthRequest, res),
+);
+
+router.post(
+    "/refresh",
+    validateRefreshToken,
+    (req: Request, res: Response, next: NextFunction) =>
+        authController.refresh(req as AuthRequest, res, next),
 );
 
 export default router;
