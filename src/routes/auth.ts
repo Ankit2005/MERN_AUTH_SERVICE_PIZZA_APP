@@ -1,4 +1,9 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, {
+    Request,
+    Response,
+    NextFunction,
+    RequestHandler,
+} from "express";
 import { AppDataSource } from "../config/data-source";
 import logger from "../config/logger";
 import { AuthController } from "../controllers/AuthController";
@@ -6,6 +11,7 @@ import { RefreshToken } from "../entity/RefreshToken";
 import { User } from "../entity/User";
 import authenticate from "../middlewares/authenticate";
 import validateRefreshToken from "../middlewares/validateRefreshToken";
+import parseRefreshToken from "../middlewares/parseRefreshToken";
 import { CredentialService } from "../services/CredentialService";
 import { TokenService } from "../services/TokenService";
 import { UserService } from "../services/UserService";
@@ -43,8 +49,18 @@ router.post(
         authController.login(req, res, next),
 );
 
-router.get("/self", authenticate, (req: Request, res: Response) =>
-    authController.self(req as AuthRequest, res),
+// router.get("/self", authenticate, (req: Request, res: Response) =>
+//     authController.self(req as AuthRequest, res),
+// );
+
+router.get(
+    "/self",
+    authenticate as RequestHandler,
+    (req: Request, res: Response) =>
+        authController.self(
+            req as AuthRequest,
+            res,
+        ) as unknown as RequestHandler,
 );
 
 router.post(
@@ -52,6 +68,26 @@ router.post(
     validateRefreshToken,
     (req: Request, res: Response, next: NextFunction) =>
         authController.refresh(req as AuthRequest, res, next),
+);
+
+// router.post(
+//     "/logout",
+//     authenticate,
+//     parseRefreshToken,
+//     (req: Request, res: Response, next: NextFunction) =>
+//         authController.logout(req as AuthRequest, res, next),
+// );
+
+router.post(
+    "/logout",
+    authenticate as RequestHandler,
+    parseRefreshToken as RequestHandler,
+    (req: Request, res: Response, next: NextFunction) =>
+        authController.logout(
+            req as AuthRequest,
+            res,
+            next,
+        ) as unknown as RequestHandler,
 );
 
 export default router;

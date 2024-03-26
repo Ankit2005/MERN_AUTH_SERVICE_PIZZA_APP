@@ -1,4 +1,5 @@
-import { expressjwt, GetVerificationKey, Request } from "express-jwt";
+import { expressjwt, GetVerificationKey } from "express-jwt";
+import { Request } from "express";
 import jwksClient from "jwks-rsa";
 import { Config } from "../config";
 import { AuthCookie } from "../types";
@@ -13,6 +14,7 @@ export default expressjwt({
     getToken(req: Request) {
         const authHeader = req.headers.authorization;
 
+        // Bearer eyjllsdjfljlasdjfljlsadjfljlsdf
         if (authHeader && authHeader.split(" ")[1] !== "undefined") {
             const token = authHeader.split(" ")[1];
             if (token) {
