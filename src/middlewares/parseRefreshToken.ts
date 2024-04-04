@@ -8,7 +8,6 @@ export default expressjwt({
     algorithms: ["HS256"],
     getToken(req: Request) {
         const { refreshToken } = req.cookies as AuthCookie;
-
         return refreshToken;
     },
 });

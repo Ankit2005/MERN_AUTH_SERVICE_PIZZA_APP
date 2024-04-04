@@ -165,9 +165,11 @@ export class AuthController {
     }
 
     async self(req: AuthRequest, res: Response) {
+        //console.log("token -->  ", req);
         const user = await this.userService.findById(Number(req.auth.sub));
         res.json({ ...user, password: undefined });
     }
+    // afdfd
 
     async refresh(req: AuthRequest, res: Response, next: NextFunction) {
         try {
