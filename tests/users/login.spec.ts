@@ -7,7 +7,7 @@ import bcrypt from "bcrypt";
 import { User } from "../../src/entity/User";
 import { Roles } from "../../src/constants";
 
-describe("POST /aut/login", () => {
+describe("POST /auth/login", () => {
     let connection: DataSource;
 
     beforeAll(async () => {

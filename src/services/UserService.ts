@@ -1,46 +1,59 @@
 import createHttpError from "http-errors";
 import { Repository } from "typeorm";
 import { User } from "../entity/User";
-import { UserData } from "../types";
+import { LimitedUserData, UserData } from "../types";
 import bcrypt from "bcrypt";
 
 export class UserService {
     constructor(private userRepository: Repository<User>) {}
 
-    async create({ firstName, lastName, email, password, role }: UserData) {
+    async create({
+        firstName,
+        lastName,
+        email,
+        password,
+        role,
+        tenantId,
+    }: UserData) {
         const user = await this.userRepository.findOne({
             where: { email: email },
         });
-
         if (user) {
-            const error = createHttpError(400, "Emal is already exists");
-            throw error;
+            const err = createHttpError(400, "Email is already exists!");
+            throw err;
         }
-
         // Hash the password
         const saltRounds = 10;
-        const hashPassword = await bcrypt.hash(password, saltRounds);
-
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
         try {
             return await this.userRepository.save({
                 firstName,
                 lastName,
                 email,
-                password: hashPassword,
+                password: hashedPassword,
                 role,
+                tenant: tenantId ? { id: tenantId } : undefined,
             });
         } catch (err) {
             const error = createHttpError(
                 500,
-                "Failed to store then data in the database",
+                "Failed to store the data in the database",
             );
             throw error;
         }
     }
 
-    async findByEmail(email: string) {
+    async findByEmailWithPassword(email: string) {
         return await this.userRepository.findOne({
             where: { email: email },
+            select: [
+                "id",
+                "firstName",
+                "lastName",
+                "email",
+                "role",
+                "password",
+            ],
         });
     }
 
@@ -50,5 +63,26 @@ export class UserService {
                 id,
             },
         });
+    }
+
+    async update(
+        userId: number,
+        { firstName, lastName, role, email, tenantId }: LimitedUserData,
+    ) {
+        try {
+            return await this.userRepository.update(userId, {
+                firstName,
+                lastName,
+                role,
+                email,
+                tenant: tenantId ? { id: tenantId } : null,
+            });
+        } catch (err) {
+            const error = createHttpError(
+                500,
+                "Failed to update the user in the database",
+            );
+            throw error;
+        }
     }
 }
