@@ -71,3 +71,11 @@ docker run --rm --name mernpg-container -e POSTGRES_USER=root -e POSTGRES_PASSWO
 ```
 
 This setup should get you started with PostgreSQL using Docker. Make sure to adjust configurations as needed for your specific environment.
+
+## Build Docker image for production 🏃‍♂️
+
+```bash
+docker build -t mernstack_test_prod_image -f docker/prod/Dockerfile .
+```
+
+This command is create your docker image build for production lavel
