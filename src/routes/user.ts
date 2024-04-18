@@ -8,8 +8,8 @@ import { CreateUserRequest, UpdateUserRequest } from "../types";
 import { UserController } from "../controllers/UserController";
 import { UserService } from "../services/UserService";
 import { User } from "../entity/User";
-import updateUserValidator from "../validators/update-user-validator";
 import logger from "../config/logger";
+import updateUserValidator from "../validators/update-user-validator";
 
 const router = express.Router();
 

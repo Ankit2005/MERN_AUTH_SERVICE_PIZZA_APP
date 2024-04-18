@@ -8,7 +8,6 @@ import { Repository } from "typeorm";
 export class TokenService {
     constructor(private refreshTokenRepository: Repository<RefreshToken>) {}
     generateAccessToken(payload: JwtPayload) {
-        -1;
         let privateKey: string;
         if (!Config.PRIVATE_KEY) {
             const error = createHttpError(500, "SECRET_KEY is not set");
