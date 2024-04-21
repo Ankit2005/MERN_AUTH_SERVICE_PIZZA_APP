@@ -13,7 +13,7 @@ describe("GET /auth/self", () => {
 
     beforeAll(async () => {
         connection = await AppDataSource.initialize();
-        jwks = createJWKSMock("http://localhost:5501");
+        jwks = createJWKSMock("http://localhost:5500");
     });
 
     beforeEach(async () => {
