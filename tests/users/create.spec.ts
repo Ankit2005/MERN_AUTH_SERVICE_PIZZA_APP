@@ -14,7 +14,7 @@ describe("POST /users", () => {
     let jwks: ReturnType<typeof createJWKSMock>;
 
     beforeAll(async () => {
-        jwks = createJWKSMock("http://localhost:5501");
+        jwks = createJWKSMock("http://localhost:5500");
         connection = await AppDataSource.initialize();
     });
 
