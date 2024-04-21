@@ -12,14 +12,14 @@ describe("GET /auth/self", () => {
     let jwks: ReturnType<typeof createJWKSMock>;
 
     beforeAll(async () => {
-        connection = await AppDataSource.initialize();
         jwks = createJWKSMock("http://localhost:5501");
+        connection = await AppDataSource.initialize();
     });
 
     beforeEach(async () => {
+        jwks.start();
         await connection.dropDatabase();
         await connection.synchronize();
-        jwks.start();
     });
 
     afterEach(() => {
