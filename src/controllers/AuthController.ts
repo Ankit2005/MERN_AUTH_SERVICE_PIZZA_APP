@@ -7,7 +7,6 @@ import { AuthRequest, RegisterUserRequest } from "../types";
 import { TokenService } from "../services/TokenService";
 import createHttpError from "http-errors";
 import { CredentialService } from "../services/CredentialService";
-import { Roles } from "../constants";
 
 export class AuthController {
     constructor(
@@ -29,12 +28,13 @@ export class AuthController {
             return res.status(400).json({ errors: result.array() });
         }
 
-        const { firstName, lastName, email, password } = req.body;
+        const { firstName, lastName, email, password, role } = req.body;
 
         this.logger.debug("New request to register a user", {
             firstName,
             lastName,
             email,
+            role,
             password: "******",
         });
         try {
@@ -43,7 +43,8 @@ export class AuthController {
                 lastName,
                 email,
                 password,
-                role: Roles.CUSTOMER,
+                role,
+                // role: Roles.CUSTOMER,
             });
             this.logger.info("User has been registered", { id: user.id });
 
@@ -66,7 +67,7 @@ export class AuthController {
             res.cookie("accessToken", accessToken, {
                 domain: "localhost",
                 sameSite: "strict",
-                maxAge: 1000 * 60 * 60, // expire in 1h
+                maxAge: 1000 * 60 * 60 * 24 * 365, // expire in 1h
                 httpOnly: true, // very important flag
             });
 
@@ -165,13 +166,10 @@ export class AuthController {
             return;
         }
     }
-
     async self(req: AuthRequest, res: Response) {
-        //console.log("token -->  ", req);
         const user = await this.userService.findById(Number(req.auth.sub));
         res.json({ ...user, password: undefined });
     }
-    // afdfd
 
     async refresh(req: AuthRequest, res: Response, next: NextFunction) {
         try {

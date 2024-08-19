@@ -22,7 +22,7 @@ export default checkSchema(
             customSanitizer: {
                 options: (value) => {
                     const parsedValue = Number(value);
-                    return Number.isNaN(parsedValue) ? 6 : parsedValue;
+                    return Number.isNaN(parsedValue) ? 10 : parsedValue;
                 },
             },
         },

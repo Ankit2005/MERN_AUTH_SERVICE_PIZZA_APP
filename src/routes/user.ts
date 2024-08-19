@@ -1,4 +1,9 @@
-import express, { NextFunction, RequestHandler, Response } from "express";
+import express, {
+    NextFunction,
+    Request,
+    RequestHandler,
+    Response,
+} from "express";
 
 import { AppDataSource } from "../config/data-source";
 import authenticate from "../middlewares/authenticate";
@@ -10,6 +15,7 @@ import { UserService } from "../services/UserService";
 import { User } from "../entity/User";
 import logger from "../config/logger";
 import updateUserValidator from "../validators/update-user-validator";
+import listUsersValidator from "../validators/list-users-validator";
 
 const router = express.Router();
 
@@ -32,6 +38,15 @@ router.patch(
     updateUserValidator,
     (req: UpdateUserRequest, res: Response, next: NextFunction) =>
         userController.update(req, res, next) as unknown as RequestHandler,
+);
+
+router.get(
+    "/",
+    authenticate as RequestHandler,
+    canAccess([Roles.ADMIN]),
+    listUsersValidator,
+    (req: Request, res: Response, next: NextFunction) =>
+        userController.getAll(req, res, next) as unknown as RequestHandler,
 );
 
 export default router;

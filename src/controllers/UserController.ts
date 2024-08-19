@@ -1,10 +1,14 @@
-import { NextFunction, Response } from "express";
-import { validationResult } from "express-validator";
+import { NextFunction, Request, Response } from "express";
+import { matchedData, validationResult } from "express-validator";
 import createHttpError from "http-errors";
 import { Logger } from "winston";
 import { Roles } from "../constants";
 import { UserService } from "../services/UserService";
-import { CreateUserRequest, UpdateUserRequest } from "../types";
+import {
+    CreateUserRequest,
+    UpdateUserRequest,
+    UserQueryParams,
+} from "../types";
 
 export class UserController {
     constructor(
@@ -60,6 +64,26 @@ export class UserController {
             this.logger.info("User has been updated", { id: userId });
 
             res.json({ id: Number(userId) });
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async getAll(req: Request, res: Response, next: NextFunction) {
+        const validatedQuery = matchedData(req, { onlyValidData: true });
+
+        try {
+            const [users, count] = await this.userService.getAll(
+                validatedQuery as UserQueryParams,
+            );
+
+            this.logger.info("All users have been fetched");
+            res.json({
+                currentPage: validatedQuery.currentPage as number,
+                perPage: validatedQuery.perPage as number,
+                total: count,
+                data: users,
+            });
         } catch (err) {
             next(err);
         }
