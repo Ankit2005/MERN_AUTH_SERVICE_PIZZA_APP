@@ -10,6 +10,13 @@ export default checkSchema(
                 },
             },
         },
+        role: {
+            customSanitizer: {
+                options: (value: unknown) => {
+                    return value ? value : "";
+                },
+            },
+        },
         currentPage: {
             customSanitizer: {
                 options: (value) => {
